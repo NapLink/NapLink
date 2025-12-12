@@ -1,0 +1,1 @@
+export { OneBotApi } from './onebot';
