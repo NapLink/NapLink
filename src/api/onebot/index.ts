@@ -8,6 +8,7 @@ import { createStreamApi, type StreamApi } from './stream';
 import { createRequestApi, type RequestApi } from './requests';
 import { createSystemApi, type SystemApi } from './system';
 import { createNapCatApi, type NapCatApi } from './napcat';
+import { createRawActionApi, type RawActionApi } from './raw';
 
 import type { Logger } from '../../types/config';
 
@@ -27,6 +28,7 @@ export class OneBotApi {
     private requestApi: RequestApi;
     private systemApi: SystemApi;
     private napcatApi: NapCatApi;
+    readonly raw: RawActionApi;
 
     constructor(client: ApiClient, logger: Logger) {
         this.messageApi = createMessageApi(client);
@@ -38,6 +40,7 @@ export class OneBotApi {
         this.requestApi = createRequestApi(client);
         this.systemApi = createSystemApi(client);
         this.napcatApi = createNapCatApi(client);
+        this.raw = createRawActionApi(client);
 
         Object.assign(
             this,

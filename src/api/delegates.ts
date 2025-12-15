@@ -149,6 +149,12 @@ export type OneBotApiMethods = {
     sendGroupSign(groupId: number | string): Promise<any>;
     getClientkey(): Promise<any>;
     clickInlineKeyboardButton(params: { group_id: number | string; bot_appid: string; button_id?: string; callback_data?: string; msg_seq?: string }): Promise<any>;
+
+    /**
+     * Raw action table (ActionName 全覆盖)
+     * 访问方式：client.raw['get_group_shut_list']({ group_id: 123 })
+     */
+    raw: any;
 };
 
 export function bindOneBotApiMethods(api: OneBotApi, target: any): void {
@@ -275,6 +281,7 @@ export function bindOneBotApiMethods(api: OneBotApi, target: any): void {
         sendGroupSign: (groupId) => (api as any).sendGroupSign(groupId),
         getClientkey: () => (api as any).getClientkey(),
         clickInlineKeyboardButton: (params) => (api as any).clickInlineKeyboardButton(params),
+        raw: (api as any).raw,
     };
 
     Object.assign(target, bindings);
