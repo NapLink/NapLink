@@ -56,6 +56,7 @@ export type NapCatApi = {
     sendGroupSign(groupId: number | string): Promise<any>;
 
     // 其他
+    fetchCustomFace(params?: any): Promise<any>;
     getClientkey(): Promise<any>;
     clickInlineKeyboardButton(params: {
         group_id: number | string;
@@ -152,6 +153,9 @@ export function createNapCatApi(client: ApiClient): NapCatApi {
         sendGroupSign(groupId) {
             return client.call('send_group_sign', { group_id: groupId });
         },
+        fetchCustomFace(params) {
+            return client.call('fetch_custom_face', params ?? {});
+        },
         getClientkey() {
             return client.call('get_clientkey');
         },
@@ -165,4 +169,3 @@ export function createNapCatApi(client: ApiClient): NapCatApi {
         },
     };
 }
-

@@ -64,6 +64,7 @@ export type OneBotApiMethods = {
     getRecentContact(count: number): Promise<any>;
     setMsgEmojiLike(messageId: number | string, emojiId: number, set: boolean): Promise<any>;
     fetchEmojiLike(params: { message_id: number | string; emojiId: string; emojiType: string; group_id?: number | string; user_id?: number | string; count?: number }): Promise<any>;
+    fetchCustomFace(params?: any): Promise<any>;
     sendGroupPoke(groupId: number | string, userId: number | string): Promise<any>;
     sendFriendPoke(userId: number | string): Promise<any>;
     sendPoke(targetId: number | string, groupId?: number | string): Promise<any>;
@@ -279,6 +280,7 @@ export function bindOneBotApiMethods(api: OneBotApi, target: any): void {
         sendGroupAiRecord: (groupId, character, text) => (api as any).sendGroupAiRecord(groupId, character, text),
         setGroupSign: (groupId) => (api as any).setGroupSign(groupId),
         sendGroupSign: (groupId) => (api as any).sendGroupSign(groupId),
+        fetchCustomFace: (params) => (api as any).fetchCustomFace(params),
         getClientkey: () => (api as any).getClientkey(),
         clickInlineKeyboardButton: (params) => (api as any).clickInlineKeyboardButton(params),
         raw: (api as any).raw,

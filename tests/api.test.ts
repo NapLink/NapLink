@@ -270,4 +270,24 @@ describe('NapLink API wrappers', () => {
         await client.getRkeyServer();
         expect(callSpy).toHaveBeenCalledWith('get_rkey_server');
     });
+
+    it('hydrateMedia should support file_id fallback', async () => {
+        callSpy.mockImplementation(async (method: string, params: any) => {
+            if (method === 'get_file') {
+                expect(params).toEqual({ file: 'fid123' });
+                return { file: 'http://example.com/file.bin' };
+            }
+            return undefined;
+        });
+
+        const msg: any[] = [{ type: 'image', data: { file_id: 'fid123' } }];
+        await client.api.hydrateMedia(msg);
+        expect(msg[0].data.file).toBe('http://example.com/file.bin');
+        expect(msg[0].data.url).toBe('http://example.com/file.bin');
+    });
+
+    it('fetchCustomFace should call fetch_custom_face', async () => {
+        await client.fetchCustomFace({ count: 10 });
+        expect(callSpy).toHaveBeenCalledWith('fetch_custom_face', { count: 10 });
+    });
 });
