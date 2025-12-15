@@ -100,6 +100,55 @@ export type OneBotApiMethods = {
     getVersionInfo(): Promise<any>;
     handleFriendRequest(flag: string, approve?: boolean, remark?: string): Promise<any>;
     handleGroupRequest(flag: string, subType: 'add' | 'invite', approve?: boolean, reason?: string): Promise<any>;
+
+    // SystemApi (NapCat / go-cqhttp 扩展)
+    getOnlineClients(noCache?: boolean): Promise<any>;
+    getRobotUinRange(): Promise<any>;
+    canSendImage(): Promise<any>;
+    canSendRecord(): Promise<any>;
+    getCookies(domain: string): Promise<any>;
+    getCsrfToken(): Promise<any>;
+    getCredentials(domain: string): Promise<any>;
+    setInputStatus(userId: number | string, eventType: number): Promise<any>;
+    ocrImage(image: string, dot?: boolean): Promise<any>;
+    translateEn2zh(words: string[]): Promise<any>;
+    checkUrlSafely(url: string): Promise<any>;
+    handleQuickOperation(context: any, operation: any): Promise<any>;
+    getModelShow(model: string): Promise<any>;
+    setModelShow(model: string, modelShow: string): Promise<any>;
+    getPacketStatus(): Promise<any>;
+
+    // NapCatApi (扩展能力合集)
+    getRkeyEx(): Promise<any>;
+    getRkeyServer(): Promise<any>;
+    getRkey(): Promise<any>;
+    setFriendRemark(userId: number | string, remark: string): Promise<any>;
+    deleteFriend(userId: number | string): Promise<any>;
+    getUnidirectionalFriendList(): Promise<any>;
+    setGroupRemark(groupId: number | string, remark: string): Promise<any>;
+    getGroupInfoEx(groupId: number | string): Promise<any>;
+    getGroupDetailInfo(groupId: number | string): Promise<any>;
+    getGroupIgnoredNotifies(): Promise<any>;
+    getGroupShutList(groupId: number | string): Promise<any>;
+    sendPrivateForwardMessage(params: { user_id: number | string; messages: any[]; news?: any[]; prompt?: string; summary?: string; source?: string }): Promise<any>;
+    forwardFriendSingleMsg(userId: number | string, messageId: number | string): Promise<any>;
+    forwardGroupSingleMsg(groupId: number | string, messageId: number | string): Promise<any>;
+    sendForwardMsg(params: { group_id?: number | string; user_id?: number | string; messages: any[]; news?: any[]; prompt?: string; summary?: string; source?: string }): Promise<any>;
+    sendGroupNotice(params: { group_id: number | string; content: string; image?: string; pinned?: number | string; type?: number | string; confirm_required?: number | string; is_show_edit_card?: number | string; tip_window_type?: number | string }): Promise<any>;
+    getGroupNotice(groupId: number | string): Promise<any>;
+    delGroupNotice(groupId: number | string, noticeId: string): Promise<any>;
+    setOnlineStatus(status: number | string, extStatus: number | string, batteryStatus: number | string): Promise<any>;
+    setDiyOnlineStatus(faceId: number | string, wording?: string, faceType?: number | string): Promise<any>;
+    sendArkShare(params: { user_id?: number | string; group_id?: number | string; phone_number?: string }): Promise<any>;
+    sendGroupArkShare(groupId: number | string): Promise<any>;
+    getMiniAppArk(payload: any): Promise<any>;
+    getAiCharacters(groupId: number | string, chatType?: number | string): Promise<any>;
+    getAiRecord(groupId: number | string, character: string, text: string): Promise<any>;
+    sendGroupAiRecord(groupId: number | string, character: string, text: string): Promise<any>;
+    setGroupSign(groupId: number | string): Promise<any>;
+    sendGroupSign(groupId: number | string): Promise<any>;
+    getClientkey(): Promise<any>;
+    clickInlineKeyboardButton(params: { group_id: number | string; bot_appid: string; button_id?: string; callback_data?: string; msg_seq?: string }): Promise<any>;
 };
 
 export function bindOneBotApiMethods(api: OneBotApi, target: any): void {
@@ -177,6 +226,55 @@ export function bindOneBotApiMethods(api: OneBotApi, target: any): void {
         handleFriendRequest: (flag, approve = true, remark?: string) => api.handleFriendRequest(flag, approve, remark),
         handleGroupRequest: (flag, subType, approve = true, reason?: string) =>
             api.handleGroupRequest(flag, subType, approve, reason),
+
+        // SystemApi
+        getOnlineClients: (noCache = false) => (api as any).getOnlineClients(noCache),
+        getRobotUinRange: () => (api as any).getRobotUinRange(),
+        canSendImage: () => (api as any).canSendImage(),
+        canSendRecord: () => (api as any).canSendRecord(),
+        getCookies: (domain) => (api as any).getCookies(domain),
+        getCsrfToken: () => (api as any).getCsrfToken(),
+        getCredentials: (domain) => (api as any).getCredentials(domain),
+        setInputStatus: (userId, eventType) => (api as any).setInputStatus(userId, eventType),
+        ocrImage: (image, dot) => (api as any).ocrImage(image, dot),
+        translateEn2zh: (words) => (api as any).translateEn2zh(words),
+        checkUrlSafely: (url) => (api as any).checkUrlSafely(url),
+        handleQuickOperation: (context, operation) => (api as any).handleQuickOperation(context, operation),
+        getModelShow: (model) => (api as any).getModelShow(model),
+        setModelShow: (model, modelShow) => (api as any).setModelShow(model, modelShow),
+        getPacketStatus: () => (api as any).getPacketStatus(),
+
+        // NapCatApi
+        getRkeyEx: () => (api as any).getRkeyEx(),
+        getRkeyServer: () => (api as any).getRkeyServer(),
+        getRkey: () => (api as any).getRkey(),
+        setFriendRemark: (userId, remark) => (api as any).setFriendRemark(userId, remark),
+        deleteFriend: (userId) => (api as any).deleteFriend(userId),
+        getUnidirectionalFriendList: () => (api as any).getUnidirectionalFriendList(),
+        setGroupRemark: (groupId, remark) => (api as any).setGroupRemark(groupId, remark),
+        getGroupInfoEx: (groupId) => (api as any).getGroupInfoEx(groupId),
+        getGroupDetailInfo: (groupId) => (api as any).getGroupDetailInfo(groupId),
+        getGroupIgnoredNotifies: () => (api as any).getGroupIgnoredNotifies(),
+        getGroupShutList: (groupId) => (api as any).getGroupShutList(groupId),
+        sendPrivateForwardMessage: (params) => (api as any).sendPrivateForwardMessage(params),
+        forwardFriendSingleMsg: (userId, messageId) => (api as any).forwardFriendSingleMsg(userId, messageId),
+        forwardGroupSingleMsg: (groupId, messageId) => (api as any).forwardGroupSingleMsg(groupId, messageId),
+        sendForwardMsg: (params) => (api as any).sendForwardMsg(params),
+        sendGroupNotice: (params) => (api as any).sendGroupNotice(params),
+        getGroupNotice: (groupId) => (api as any).getGroupNotice(groupId),
+        delGroupNotice: (groupId, noticeId) => (api as any).delGroupNotice(groupId, noticeId),
+        setOnlineStatus: (status, extStatus, batteryStatus) => (api as any).setOnlineStatus(status, extStatus, batteryStatus),
+        setDiyOnlineStatus: (faceId, wording, faceType) => (api as any).setDiyOnlineStatus(faceId, wording, faceType),
+        sendArkShare: (params) => (api as any).sendArkShare(params),
+        sendGroupArkShare: (groupId) => (api as any).sendGroupArkShare(groupId),
+        getMiniAppArk: (payload) => (api as any).getMiniAppArk(payload),
+        getAiCharacters: (groupId, chatType) => (api as any).getAiCharacters(groupId, chatType),
+        getAiRecord: (groupId, character, text) => (api as any).getAiRecord(groupId, character, text),
+        sendGroupAiRecord: (groupId, character, text) => (api as any).sendGroupAiRecord(groupId, character, text),
+        setGroupSign: (groupId) => (api as any).setGroupSign(groupId),
+        sendGroupSign: (groupId) => (api as any).sendGroupSign(groupId),
+        getClientkey: () => (api as any).getClientkey(),
+        clickInlineKeyboardButton: (params) => (api as any).clickInlineKeyboardButton(params),
     };
 
     Object.assign(target, bindings);

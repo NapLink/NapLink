@@ -6,6 +6,8 @@ import { createGroupApi, type GroupApi } from './group';
 import { createFileApi, type FileApi } from './files';
 import { createStreamApi, type StreamApi } from './stream';
 import { createRequestApi, type RequestApi } from './requests';
+import { createSystemApi, type SystemApi } from './system';
+import { createNapCatApi, type NapCatApi } from './napcat';
 
 import type { Logger } from '../../types/config';
 
@@ -23,6 +25,8 @@ export class OneBotApi {
     private fileApi: FileApi;
     private streamApi: StreamApi;
     private requestApi: RequestApi;
+    private systemApi: SystemApi;
+    private napcatApi: NapCatApi;
 
     constructor(client: ApiClient, logger: Logger) {
         this.messageApi = createMessageApi(client);
@@ -32,6 +36,8 @@ export class OneBotApi {
         this.fileApi = createFileApi(client);
         this.streamApi = createStreamApi(client);
         this.requestApi = createRequestApi(client);
+        this.systemApi = createSystemApi(client);
+        this.napcatApi = createNapCatApi(client);
 
         Object.assign(
             this,
@@ -42,9 +48,11 @@ export class OneBotApi {
             this.fileApi,
             this.streamApi,
             this.requestApi,
+            this.systemApi,
+            this.napcatApi,
         );
     }
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
-export interface OneBotApi extends MessageApi, MediaApi, AccountApi, GroupApi, FileApi, StreamApi, RequestApi { }
+export interface OneBotApi extends MessageApi, MediaApi, AccountApi, GroupApi, FileApi, StreamApi, RequestApi, SystemApi, NapCatApi { }

@@ -255,4 +255,19 @@ describe('NapLink API wrappers', () => {
             reason: 'nope',
         });
     });
+
+    it('getOnlineClients should call get_online_clients', async () => {
+        await client.getOnlineClients(true);
+        expect(callSpy).toHaveBeenCalledWith('get_online_clients', { no_cache: true });
+    });
+
+    it('getCsrfToken should call get_csrf_token', async () => {
+        await client.getCsrfToken();
+        expect(callSpy).toHaveBeenCalledWith('get_csrf_token');
+    });
+
+    it('getRkeyServer should call get_rkey_server', async () => {
+        await client.getRkeyServer();
+        expect(callSpy).toHaveBeenCalledWith('get_rkey_server');
+    });
 });
