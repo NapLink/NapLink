@@ -27,6 +27,7 @@
 - [事件处理](https://naplink.github.io/guide/events) - 事件系统详解
 - [最佳实践](https://naplink.github.io/guide/best-practices) - 生产环境建议
 - [架构设计](https://naplink.github.io/guide/architecture) - 内部实现
+- 最佳实践项目：[NapGram](https://github.com/NapLink/NapGram) - 基于 NapLink 的 QQ ↔ Telegram 消息桥接
 
 ## 📦 安装
 

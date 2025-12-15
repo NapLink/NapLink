@@ -6,6 +6,10 @@ export interface PendingRequest {
     createdAt: number;
     method: string;
     timer: NodeJS.Timeout | number;
+    timeoutMs: number;
+    onPacket?: (packet: any) => void;
+    onEnd?: () => void;
+    onError?: (error: Error) => void;
 }
 
 export class ResponseRegistry {
@@ -20,6 +24,23 @@ export class ResponseRegistry {
         const entry: PendingRequest = { ...request, timer };
         this.pending.set(echo, entry);
         return entry;
+    }
+
+    get(echo: string): PendingRequest | undefined {
+        return this.pending.get(echo);
+    }
+
+    refresh(echo: string): boolean {
+        const req = this.pending.get(echo);
+        if (!req) return false;
+
+        clearTimeout(req.timer as NodeJS.Timeout);
+        req.createdAt = Date.now();
+        req.timer = setTimeout(() => {
+            this.pending.delete(echo);
+            req.reject(new ApiTimeoutError(req.method, req.timeoutMs));
+        }, req.timeoutMs);
+        return true;
     }
 
     resolve(echo: string, data: any) {

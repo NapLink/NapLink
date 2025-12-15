@@ -21,6 +21,9 @@ export type OneBotApiMethods = {
     getForwardMessage(id: string): Promise<any>;
     getEssenceMessageList(groupId: number | string): Promise<any>;
     markMessageAsRead(messageId: number | string): Promise<any>;
+    markGroupMsgAsRead(groupId: number | string): Promise<any>;
+    markPrivateMsgAsRead(userId: number | string): Promise<any>;
+    markAllMsgAsRead(): Promise<any>;
     getGroupAtAllRemain(groupId: number | string): Promise<any>;
     getGroupSystemMsg(): Promise<any>;
     getGroupHonorInfo(
@@ -48,7 +51,22 @@ export type OneBotApiMethods = {
         }
     ): Promise<any>;
     getUploadStreamStatus(streamId: string): Promise<any>;
+    downloadFileStream(fileId: string, options?: { chunkSize?: number }): { packets: AsyncIterable<any>; result: Promise<any> };
+    downloadFileStreamToFile(fileId: string, options?: { chunkSize?: number; filename?: string }): Promise<{ path: string; info?: any }>;
+    downloadFileImageStream(fileId: string, options?: { chunkSize?: number }): { packets: AsyncIterable<any>; result: Promise<any> };
+    downloadFileImageStreamToFile(fileId: string, options?: { chunkSize?: number; filename?: string }): Promise<{ path: string; info?: any }>;
+    downloadFileRecordStream(fileId: string, outFormat?: string, options?: { chunkSize?: number; filename?: string }): { packets: AsyncIterable<any>; result: Promise<any> };
+    downloadFileRecordStreamToFile(fileId: string, outFormat?: string, options?: { chunkSize?: number; filename?: string }): Promise<{ path: string; info?: any }>;
+    cleanStreamTempFile(): Promise<any>;
     sendGroupForwardMessage(groupId: number | string, messages: any[]): Promise<any>;
+    getGroupMsgHistory(params: { group_id: number | string; message_seq: number | string; count: number; reverse_order?: boolean }): Promise<any>;
+    getFriendMsgHistory(params: { user_id: number | string; message_seq: number | string; count: number; reverse_order?: boolean }): Promise<any>;
+    getRecentContact(count: number): Promise<any>;
+    setMsgEmojiLike(messageId: number | string, emojiId: number, set: boolean): Promise<any>;
+    fetchEmojiLike(params: { message_id: number | string; emojiId: string; emojiType: string; group_id?: number | string; user_id?: number | string; count?: number }): Promise<any>;
+    sendGroupPoke(groupId: number | string, userId: number | string): Promise<any>;
+    sendFriendPoke(userId: number | string): Promise<any>;
+    sendPoke(targetId: number | string, groupId?: number | string): Promise<any>;
     getImage(file: string): Promise<any>;
     getRecord(file: string, outFormat?: string): Promise<any>;
     getFile(file: string): Promise<any>;
@@ -96,6 +114,9 @@ export function bindOneBotApiMethods(api: OneBotApi, target: any): void {
         getForwardMessage: (id) => api.getForwardMessage(id),
         getEssenceMessageList: (groupId) => api.getEssenceMessageList(groupId),
         markMessageAsRead: (messageId) => api.markMessageAsRead(messageId),
+        markGroupMsgAsRead: (groupId) => api.markGroupMsgAsRead(groupId),
+        markPrivateMsgAsRead: (userId) => api.markPrivateMsgAsRead(userId),
+        markAllMsgAsRead: () => api.markAllMsgAsRead(),
         getGroupAtAllRemain: (groupId) => api.getGroupAtAllRemain(groupId),
         getGroupSystemMsg: () => api.getGroupSystemMsg(),
         getGroupHonorInfo: (groupId, type) => api.getGroupHonorInfo(groupId, type),
@@ -109,7 +130,22 @@ export function bindOneBotApiMethods(api: OneBotApi, target: any): void {
         downloadFile: (url, threadCount, headers) => api.downloadFile(url, threadCount, headers),
         uploadFileStream: (file, options) => api.uploadFileStream(file, options),
         getUploadStreamStatus: (streamId) => api.getUploadStreamStatus(streamId),
+        downloadFileStream: (fileId, options) => api.downloadFileStream(fileId, options),
+        downloadFileStreamToFile: (fileId, options) => api.downloadFileStreamToFile(fileId, options),
+        downloadFileImageStream: (fileId, options) => api.downloadFileImageStream(fileId, options),
+        downloadFileImageStreamToFile: (fileId, options) => api.downloadFileImageStreamToFile(fileId, options),
+        downloadFileRecordStream: (fileId, outFormat, options) => api.downloadFileRecordStream(fileId, outFormat, options),
+        downloadFileRecordStreamToFile: (fileId, outFormat, options) => api.downloadFileRecordStreamToFile(fileId, outFormat, options),
+        cleanStreamTempFile: () => api.cleanStreamTempFile(),
         sendGroupForwardMessage: (groupId, messages) => api.sendGroupForwardMessage(groupId, messages),
+        getGroupMsgHistory: (params) => api.getGroupMsgHistory(params),
+        getFriendMsgHistory: (params) => api.getFriendMsgHistory(params),
+        getRecentContact: (count) => api.getRecentContact(count),
+        setMsgEmojiLike: (messageId, emojiId, set) => api.setMsgEmojiLike(messageId, emojiId, set),
+        fetchEmojiLike: (params) => api.fetchEmojiLike(params),
+        sendGroupPoke: (groupId, userId) => api.sendGroupPoke(groupId, userId),
+        sendFriendPoke: (userId) => api.sendFriendPoke(userId),
+        sendPoke: (targetId, groupId) => api.sendPoke(targetId, groupId),
         getImage: (file) => api.getImage(file),
         getRecord: (file, outFormat) => api.getRecord(file, outFormat),
         getFile: (file) => api.getFile(file),

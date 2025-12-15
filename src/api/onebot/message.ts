@@ -22,6 +22,9 @@ export type MessageApi = {
     deleteEssenceMessage(messageId: number | string): Promise<any>;
     getEssenceMessageList(groupId: number | string): Promise<any>;
     markMessageAsRead(messageId: number | string): Promise<any>;
+    markGroupMsgAsRead(groupId: number | string): Promise<any>;
+    markPrivateMsgAsRead(userId: number | string): Promise<any>;
+    markAllMsgAsRead(): Promise<any>;
     getGroupAtAllRemain(groupId: number | string): Promise<number>;
 
     // 系统/荣誉消息
@@ -30,6 +33,37 @@ export type MessageApi = {
         groupId: number | string,
         type: 'all' | 'talkative' | 'performer' | 'legend' | 'strong_newbie' | 'emotion'
     ): Promise<GroupHonorInfo>;
+
+    // 消息历史 / 最近会话（NapCat 扩展）
+    getGroupMsgHistory(params: {
+        group_id: number | string;
+        message_seq: number | string;
+        count: number;
+        reverse_order?: boolean;
+    }): Promise<any>;
+    getFriendMsgHistory(params: {
+        user_id: number | string;
+        message_seq: number | string;
+        count: number;
+        reverse_order?: boolean;
+    }): Promise<any>;
+    getRecentContact(count: number): Promise<any>;
+
+    // 表情回应（NapCat 扩展）
+    setMsgEmojiLike(messageId: number | string, emojiId: number, set: boolean): Promise<any>;
+    fetchEmojiLike(params: {
+        message_id: number | string;
+        emojiId: string;
+        emojiType: string;
+        group_id?: number | string;
+        user_id?: number | string;
+        count?: number;
+    }): Promise<any>;
+
+    // 戳一戳（NapCat 扩展）
+    sendGroupPoke(groupId: number | string, userId: number | string): Promise<any>;
+    sendFriendPoke(userId: number | string): Promise<any>;
+    sendPoke(targetId: number | string, groupId?: number | string): Promise<any>;
 };
 
 export function createMessageApi(client: ApiClient): MessageApi {
@@ -67,6 +101,15 @@ export function createMessageApi(client: ApiClient): MessageApi {
         markMessageAsRead(messageId) {
             return client.call('mark_msg_as_read', { message_id: messageId });
         },
+        markGroupMsgAsRead(groupId) {
+            return client.call('mark_group_msg_as_read', { group_id: groupId });
+        },
+        markPrivateMsgAsRead(userId) {
+            return client.call('mark_private_msg_as_read', { user_id: userId });
+        },
+        markAllMsgAsRead() {
+            return client.call('_mark_all_as_read');
+        },
         getGroupAtAllRemain(groupId) {
             return client.call<number>('get_group_at_all_remain', { group_id: groupId });
         },
@@ -75,6 +118,30 @@ export function createMessageApi(client: ApiClient): MessageApi {
         },
         getGroupHonorInfo(groupId, type) {
             return client.call<GroupHonorInfo>('get_group_honor_info', { group_id: groupId, type });
+        },
+        getGroupMsgHistory(params) {
+            return client.call('get_group_msg_history', params);
+        },
+        getFriendMsgHistory(params) {
+            return client.call('get_friend_msg_history', params);
+        },
+        getRecentContact(count) {
+            return client.call('get_recent_contact', { count });
+        },
+        setMsgEmojiLike(messageId, emojiId, set) {
+            return client.call('set_msg_emoji_like', { message_id: messageId, emoji_id: emojiId, set });
+        },
+        fetchEmojiLike(params) {
+            return client.call('fetch_emoji_like', params);
+        },
+        sendGroupPoke(groupId, userId) {
+            return client.call('group_poke', { group_id: groupId, user_id: userId });
+        },
+        sendFriendPoke(userId) {
+            return client.call('friend_poke', { user_id: userId });
+        },
+        sendPoke(targetId, groupId) {
+            return client.call('send_poke', groupId ? { group_id: groupId, target_id: targetId } : { user_id: targetId });
         },
     };
 }

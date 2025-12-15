@@ -83,6 +83,21 @@ describe('NapLink API wrappers', () => {
         expect(callSpy).toHaveBeenCalledWith('mark_msg_as_read', { message_id: 111 });
     });
 
+    it('markGroupMsgAsRead should call mark_group_msg_as_read', async () => {
+        await client.markGroupMsgAsRead('123');
+        expect(callSpy).toHaveBeenCalledWith('mark_group_msg_as_read', { group_id: '123' });
+    });
+
+    it('markPrivateMsgAsRead should call mark_private_msg_as_read', async () => {
+        await client.markPrivateMsgAsRead('456');
+        expect(callSpy).toHaveBeenCalledWith('mark_private_msg_as_read', { user_id: '456' });
+    });
+
+    it('markAllMsgAsRead should call _mark_all_as_read', async () => {
+        await client.markAllMsgAsRead();
+        expect(callSpy).toHaveBeenCalledWith('_mark_all_as_read');
+    });
+
     it('getGroupAtAllRemain should call get_group_at_all_remain', async () => {
         await client.getGroupAtAllRemain('123');
         expect(callSpy).toHaveBeenCalledWith('get_group_at_all_remain', { group_id: '123' });
@@ -150,6 +165,28 @@ describe('NapLink API wrappers', () => {
 
         const completeCall = callSpy.mock.calls.at(-1);
         expect(completeCall?.[1]).toEqual({ stream_id: 'sid', is_complete: true });
+    });
+
+    it('getUploadStreamStatus should call upload_file_stream with verify_only', async () => {
+        await client.getUploadStreamStatus('sid');
+        expect(callSpy).toHaveBeenCalledWith('upload_file_stream', { stream_id: 'sid', verify_only: true });
+    });
+
+    it('sendGroupPoke should call group_poke', async () => {
+        await client.sendGroupPoke('1', '2');
+        expect(callSpy).toHaveBeenCalledWith('group_poke', { group_id: '1', user_id: '2' });
+    });
+
+    it('sendFriendPoke should call friend_poke', async () => {
+        await client.sendFriendPoke('2');
+        expect(callSpy).toHaveBeenCalledWith('friend_poke', { user_id: '2' });
+    });
+
+    it('sendPoke should call send_poke', async () => {
+        await client.sendPoke('2');
+        expect(callSpy).toHaveBeenCalledWith('send_poke', { user_id: '2' });
+        await client.sendPoke('3', '999');
+        expect(callSpy).toHaveBeenCalledWith('send_poke', { group_id: '999', target_id: '3' });
     });
 
     it('sendLike should call send_like', async () => {
