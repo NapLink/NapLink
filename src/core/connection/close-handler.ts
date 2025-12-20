@@ -11,10 +11,11 @@ export type CloseHandlerDeps = {
     config: NapLinkConfig;
     reconnect: () => Promise<void>;
     reconnectService: ReconnectService;
+    onMaxAttemptsReached?: () => void; // 新增：达到最大重连次数时的回调
 };
 
 export function handleCloseEvent(deps: CloseHandlerDeps, event: any): void {
-    const { getState, setState, stopHeartbeat, logger, config, reconnectService, reconnect } = deps;
+    const { getState, setState, stopHeartbeat, logger, config, reconnectService, reconnect, onMaxAttemptsReached } = deps;
 
     stopHeartbeat();
     logger.info(`连接关闭 (code: ${event.code}, reason: ${event.reason})`);
@@ -37,6 +38,7 @@ export function handleCloseEvent(deps: CloseHandlerDeps, event: any): void {
             reconnectService,
             setState,
             connect: reconnect,
+            onMaxAttemptsReached, // 传递回调
         });
     } else {
         setState(ConnectionState.DISCONNECTED);

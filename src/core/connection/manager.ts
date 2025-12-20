@@ -23,12 +23,14 @@ export class ConnectionManager {
     private heartbeatService?: HeartbeatService;
     private connectPromise?: Promise<void>;
     private connectTimeout?: NodeJS.Timeout | number;
+    private wasReconnecting: boolean = false; // 跟踪是否处于重连状态
 
     constructor(
         private config: NapLinkConfig,
         private logger: Logger,
         private onMessage: (data: string) => void,
-        private onStateChange: (state: ConnectionState) => void
+        private onStateChange: (state: ConnectionState, wasReconnecting?: boolean) => void,
+        private emitter?: any // 新增：用于发送 connection:lost 事件
     ) {
         this.reconnectService = new ReconnectService(config.reconnect, logger);
     }
@@ -97,6 +99,15 @@ export class ConnectionManager {
                         config: this.config,
                         reconnectService: this.reconnectService,
                         reconnect: () => this.connect(),
+                        onMaxAttemptsReached: () => {
+                            // 达到最大重连次数，发送 connection:lost 事件
+                            if (this.emitter) {
+                                this.emitter.emit('connection:lost', {
+                                    timestamp: Date.now(),
+                                    attempts: this.reconnectService.getMaxAttempts()
+                                });
+                            }
+                        },
                     }, event),
                     clearConnectTimeout: () => this.clearConnectTimeout(),
                 },
@@ -168,7 +179,18 @@ export class ConnectionManager {
         if (this.state !== state) {
             this.state = state;
             this.logger.debug(`状态变更: ${state}`);
-            this.onStateChange(state);
+
+            // 记录是否处于重连状态
+            if (state === ConnectionState.RECONNECTING) {
+                this.wasReconnecting = true;
+            } else if (state === ConnectionState.CONNECTED) {
+                // 只在成功连接后传递 wasReconnecting
+                this.onStateChange(state, this.wasReconnecting);
+                this.wasReconnecting = false; // 重置标记
+                return;
+            }
+
+            this.onStateChange(state, false);
         }
     }
 

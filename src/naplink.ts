@@ -45,7 +45,8 @@ export class NapLink extends EventEmitter {
             this.config,
             this.logger,
             (message) => this.dispatcher.dispatch(message),
-            (state) => handleConnectionStateChange(this, state)
+            (state, wasReconnecting) => handleConnectionStateChange(this, state, wasReconnecting || false),
+            this // 传递 emitter 用于发送 connection:lost 事件
         );
 
         this.apiClient = new ApiClient(this.connection, this.config, this.logger);
