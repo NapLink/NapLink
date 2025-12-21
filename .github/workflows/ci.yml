@@ -12,28 +12,30 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [22.x, 24.x]
 
     steps:
     - uses: actions/checkout@v4
+
+    - uses: pnpm/action-setup@v4
 
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+        cache: 'pnpm'
 
     - name: Install dependencies
-      run: npm ci
+      run: pnpm install --frozen-lockfile
 
     - name: Lint
-      run: npm run lint
+      run: pnpm lint
 
     - name: Type Check
-      run: npm run typecheck
+      run: pnpm typecheck
 
     - name: Test
-      run: npm test
+      run: pnpm test
 
     - name: Build
-      run: npm run build
+      run: pnpm build

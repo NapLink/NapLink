@@ -32,11 +32,7 @@
 ## 📦 安装
 
 ```bash
-npm install naplink
-# 或
 pnpm add naplink
-# 或
-yarn add naplink
 ```
 
 ## 🔧 配置示例
@@ -68,19 +64,19 @@ const client = new NapLink({
 
 ```bash
 # 安装依赖
-npm install
+pnpm install
 
 # 开发模式
-npm run dev
+pnpm dev
 
 # 构建
-npm run build
+pnpm build
 
 # 测试
-npm test
+pnpm test
 
 # 类型检查
-npm run typecheck
+pnpm typecheck
 ```
 
 ## 📄 许可证
