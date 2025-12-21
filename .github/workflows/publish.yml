@@ -49,6 +49,7 @@ jobs:
       - name: Publish to GitHub Packages
         run: |
           pnpm config set @naplink:registry https://npm.pkg.github.com
+          pnpm config set //npm.pkg.github.com/:_authToken ${NODE_AUTH_TOKEN}
           pnpm publish --registry https://npm.pkg.github.com --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -57,6 +58,7 @@ jobs:
         run: |
           pnpm config set registry https://registry.npmjs.org
           pnpm config set @naplink:registry https://registry.npmjs.org
+          pnpm config set //registry.npmjs.org/:_authToken ${NODE_AUTH_TOKEN}
           pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
