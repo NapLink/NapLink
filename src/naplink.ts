@@ -127,4 +127,5 @@ export class NapLink extends EventEmitter {
 
 // 通过接口合并将动态绑定的方法暴露到实例类型
 // eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface NapLink extends OneBotApiMethods { }
