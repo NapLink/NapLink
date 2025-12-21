@@ -150,7 +150,6 @@ export class ApiClient {
         if (response.status === 'ok' || response.retcode === 0) {
             if (isStreamAction) {
                 const packet = response.data;
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 const packetType = packet?.type;
 
                 // callStream() 模式：同一次请求会收到多包（file_info / file_chunk / file_complete）
