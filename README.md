@@ -1,8 +1,8 @@
 # NapLink
 
-> 现代化的 NapCat WebSocket 客户端 SDK
+> 现代化的 NapCat WebSocket TypeScript/JavaScript 客户端 SDK
 
-[![npm version](https://img.shields.io/npm/v/naplink)](https://www.npmjs.com/package/naplink)
+[![npm](https://img.shields.io/npm/v/@naplink/naplink?logo=npm)](https://www.npmjs.com/package/@naplink/naplink)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.4+-blue)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green)](https://nodejs.org/)
 [![Documentation](https://img.shields.io/badge/docs-naplink.github.io-blue)](https://naplink.github.io/)

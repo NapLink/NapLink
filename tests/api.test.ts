@@ -203,11 +203,12 @@ describe('NapLink API wrappers', () => {
             group_id: '1',
             file: '/tmp/a.txt',
             name: 'a.txt',
+            upload_file: true,
         });
     });
 
     it('uploadGroupFile should accept buffer and write temp file', async () => {
-        await client.uploadGroupFile('1', Buffer.from('demo'), 'buf.bin');
+        await client.uploadGroupFile('1', Buffer.from('demo') as any, 'buf.bin');
         const lastCall = callSpy.mock.calls.at(-1);
         const payload = lastCall?.[1] as any;
         expect(payload.file).toMatch(/buf\.bin$/);
@@ -221,6 +222,7 @@ describe('NapLink API wrappers', () => {
             user_id: '2',
             file: '/tmp/b.txt',
             name: 'b.txt',
+            upload_file: true,
         });
     });
 
