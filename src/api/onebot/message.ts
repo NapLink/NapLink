@@ -58,6 +58,7 @@ export type MessageApi = {
         group_id?: number | string;
         user_id?: number | string;
         count?: number;
+        cookie?: string;
     }): Promise<any>;
 
     // 戳一戳（NapCat 扩展）
