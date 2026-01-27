@@ -45,7 +45,8 @@ export function attachWebSocketHandlers(
     ws.onerror = (event: any) => {
         deps.clearConnectTimeout();
         const error = new ConnectionError('WebSocket 错误', event);
-        deps.logger.error('连接错误', error);
+        deps.logger.error(`连接错误: ${error.message}`);
+        deps.logger.debug('详细错误信息', error);
         reject(error);
     };
 

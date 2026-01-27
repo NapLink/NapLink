@@ -56,7 +56,9 @@ export class ReconnectService {
                 await reconnectFn();
                 this.reset(); // 重连成功，重置状态
             } catch (error) {
-                this.logger.error('重连失败', error as Error);
+                const err = error as Error;
+                this.logger.error(`重连失败: ${err.message}`);
+                this.logger.debug('详细错误信息', err);
                 // 增加退避延迟
                 this.backoffMs = Math.min(
                     this.backoffMs * this.config.backoff.multiplier,
