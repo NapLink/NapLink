@@ -57,6 +57,7 @@ export type NapCatApi = {
 
     // 其他
     fetchCustomFace(params?: any): Promise<any>;
+    getEmojiLikes(params: { message_id: string; emoji_id: string; emoji_type?: string; group_id?: string; count?: number }): Promise<any>;
     getClientkey(): Promise<any>;
     clickInlineKeyboardButton(params: {
         group_id: number | string;
@@ -155,6 +156,9 @@ export function createNapCatApi(client: ApiClient): NapCatApi {
         },
         fetchCustomFace(params) {
             return client.call('fetch_custom_face', params ?? {});
+        },
+        getEmojiLikes(params) {
+            return client.call('get_emoji_likes', params);
         },
         getClientkey() {
             return client.call('get_clientkey');

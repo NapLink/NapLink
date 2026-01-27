@@ -67,3 +67,13 @@ export interface PokeNotice extends NotifyNotice {
     user_id: number; // Sender
     group_id?: number;
 }
+
+export interface GroupGrayTipNotice extends NotifyNotice {
+    sub_type: 'gray_tip';
+    group_id: number;
+    user_id: number;        // 真实发送者QQ（如果是伪造的灰条，这就是攻击者）
+    message_id: number;     // 消息ID，可用于撤回
+    busi_id: string;        // 业务ID
+    content: string;        // 灰条内容（JSON字符串）
+    raw_info: unknown;      // 原始信息
+}

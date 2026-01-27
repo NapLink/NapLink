@@ -6,8 +6,8 @@ import { pipeline } from 'stream/promises';
 import type { ApiClient } from '../../core/api-client';
 
 export type FileApi = {
-    uploadGroupFile(groupId: number | string, file: string | Buffer | Uint8Array | NodeJS.ReadableStream, name: string): Promise<any>;
-    uploadPrivateFile(userId: number | string, file: string | Buffer | Uint8Array | NodeJS.ReadableStream, name: string): Promise<any>;
+    uploadGroupFile(groupId: number | string, file: string | Buffer | Uint8Array | NodeJS.ReadableStream, name: string, folder?: string, uploadFile?: boolean): Promise<any>;
+    uploadPrivateFile(userId: number | string, file: string | Buffer | Uint8Array | NodeJS.ReadableStream, name: string, uploadFile?: boolean): Promise<any>;
     setGroupPortrait(groupId: number | string, file: string | Buffer | Uint8Array | NodeJS.ReadableStream): Promise<any>;
 
     getGroupFileSystemInfo(groupId: number | string): Promise<any>;
@@ -37,13 +37,13 @@ export function createFileApi(client: ApiClient): FileApi {
     };
 
     return {
-        async uploadGroupFile(groupId, file, name) {
+        async uploadGroupFile(groupId, file, name, folder, uploadFile = true) {
             const normalized = await normalizeFileInput(file, name);
-            return client.call('upload_group_file', { group_id: groupId, file: normalized, name });
+            return client.call('upload_group_file', { group_id: groupId, file: normalized, name, folder, upload_file: uploadFile });
         },
-        async uploadPrivateFile(userId, file, name) {
+        async uploadPrivateFile(userId, file, name, uploadFile = true) {
             const normalized = await normalizeFileInput(file, name);
-            return client.call('upload_private_file', { user_id: userId, file: normalized, name });
+            return client.call('upload_private_file', { user_id: userId, file: normalized, name, upload_file: uploadFile });
         },
         async setGroupPortrait(groupId, file) {
             return this.uploadGroupFile(groupId, file as any, 'portrait');
