@@ -64,6 +64,19 @@ export class ConnectionManager {
             this.logger.info(`连接到 ${url}`);
 
             try {
+                // 清理旧的连接及其处理程序，防止“幽灵连接”分发消息
+                if (this.ws) {
+                    this.logger.debug('清理旧的 WebSocket 连接');
+                    this.ws.onopen = null;
+                    this.ws.onclose = null;
+                    this.ws.onerror = null;
+                    this.ws.onmessage = null;
+                    if (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING) {
+                        this.ws.close(1001, '正在重新连接');
+                    }
+                    this.ws = undefined;
+                }
+
                 this.ws = new WebSocket(url);
             } catch (error) {
                 const err = new ConnectionError('WebSocket 创建失败', error);
@@ -131,7 +144,15 @@ export class ConnectionManager {
 
         if (this.ws) {
             try {
-                this.ws.close(code, reason);
+                // 清理监听器
+                this.ws.onopen = null;
+                this.ws.onclose = null;
+                this.ws.onerror = null;
+                this.ws.onmessage = null;
+
+                if (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING) {
+                    this.ws.close(code, reason);
+                }
             } catch (error) {
                 this.logger.error('关闭连接失败', error as Error);
             }
@@ -139,6 +160,7 @@ export class ConnectionManager {
         }
 
         this.setState(ConnectionState.DISCONNECTED);
+        this.wasReconnecting = false;
     }
 
     /**
