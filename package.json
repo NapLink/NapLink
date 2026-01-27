@@ -1,6 +1,6 @@
 {
     "name": "@naplink/naplink",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "现代化的 NapCat WebSocket TypeScript/JavaScript 客户端 SDK",
     "type": "module",
     "main": "./dist/index.js",
