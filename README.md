@@ -33,6 +33,8 @@
 
 ```bash
 pnpm add @naplink/naplink
+npm install @naplink/naplink
+yarn add @naplink/naplink
 ```
 
 ## 🔧 配置示例
