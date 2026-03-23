@@ -21,8 +21,8 @@
         "dev": "tsup --watch",
         "test": "vitest",
         "test:ui": "vitest --ui",
-        "lint": "eslint src --ext .ts",
-        "lint:fix": "eslint src --ext .ts --fix",
+        "lint": "eslint src tests examples --ext .ts",
+        "lint:fix": "eslint src tests examples --ext .ts --fix",
         "typecheck": "tsc --noEmit"
     },
     "packageManager": "pnpm@10.26.1",

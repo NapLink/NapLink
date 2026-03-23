@@ -194,14 +194,21 @@ export class ApiClient {
      * 销毁API客户端
      */
     destroy(): void {
-        // 清理所有待处理的请求
-        this.registry.clearAll('API客户端已销毁');
+        this.clearPendingRequests('API客户端已销毁');
 
         // 停止清理定时器
         if (this.cleanupTimer) {
             clearInterval(this.cleanupTimer as NodeJS.Timeout);
             this.cleanupTimer = undefined;
         }
+    }
+
+    /**
+     * 清理所有待处理请求，但保留客户端可继续使用。
+     * 适用于临时断线、主动 disconnect 后再次 connect 的场景。
+     */
+    clearPendingRequests(reason: string): void {
+        this.registry.clearAll(reason);
     }
 
     /**

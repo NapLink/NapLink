@@ -141,6 +141,7 @@ export class ConnectionManager {
 
         this.reconnectService.cancel();
         this.stopHeartbeat();
+        this.clearConnectTimeout();
 
         if (this.ws) {
             try {

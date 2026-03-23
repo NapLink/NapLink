@@ -72,7 +72,7 @@ export class NapLink extends EventEmitter {
     disconnect(): void {
         this.logger.info('断开连接...');
         this.connection.disconnect();
-        this.apiClient.destroy();
+        this.apiClient.clearPendingRequests('连接已断开');
     }
 
     /**
@@ -109,6 +109,16 @@ export class NapLink extends EventEmitter {
      */
     get api(): OneBotApi {
         return this.oneBotApi;
+    }
+
+    /**
+     * 销毁客户端实例
+     * 调用后不应再复用当前实例。
+     */
+    dispose(): void {
+        this.logger.info('销毁客户端...');
+        this.connection.disconnect();
+        this.apiClient.destroy();
     }
 
     // ============ 内部方法 ============

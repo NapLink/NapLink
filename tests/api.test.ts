@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import fs from 'fs';
-import { Readable } from 'stream';
 import { NapLink } from '../src';
 
 describe('NapLink API wrappers', () => {
