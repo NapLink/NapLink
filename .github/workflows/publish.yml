@@ -23,6 +23,7 @@ jobs:
         with:
           node-version: '25.x'
           cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -53,9 +54,10 @@ jobs:
         run: |
           PACKAGE_NAME="${{ steps.package_meta.outputs.package_name }}"
           PACKAGE_VERSION="${{ steps.package_meta.outputs.package_version }}"
-
-          pnpm config set @naplink:registry https://npm.pkg.github.com
-          pnpm config set //npm.pkg.github.com/:_authToken ${NODE_AUTH_TOKEN}
+          printf '%s\n' \
+            "@naplink:registry=https://npm.pkg.github.com" \
+            "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" \
+            > "$NPM_CONFIG_USERCONFIG"
 
           if npm view "${PACKAGE_NAME}@${PACKAGE_VERSION}" version --registry https://npm.pkg.github.com >/dev/null 2>&1; then
             echo "GitHub Packages already has ${PACKAGE_NAME}@${PACKAGE_VERSION}, skipping publish."
@@ -65,15 +67,19 @@ jobs:
             echo "exists=false" >> "$GITHUB_OUTPUT"
           fi
         env:
+          NPM_CONFIG_USERCONFIG: ${{ runner.temp }}/npmrc-gpr-check
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to GitHub Packages
         if: steps.check_gpr.outputs.exists != 'true'
         run: |
-          pnpm config set @naplink:registry https://npm.pkg.github.com
-          pnpm config set //npm.pkg.github.com/:_authToken ${NODE_AUTH_TOKEN}
+          printf '%s\n' \
+            "@naplink:registry=https://npm.pkg.github.com" \
+            "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" \
+            > "$NPM_CONFIG_USERCONFIG"
           pnpm publish --registry https://npm.pkg.github.com --no-git-checks
         env:
+          NPM_CONFIG_USERCONFIG: ${{ runner.temp }}/npmrc-gpr-publish
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check npmjs version
@@ -81,6 +87,10 @@ jobs:
         run: |
           PACKAGE_NAME="${{ steps.package_meta.outputs.package_name }}"
           PACKAGE_VERSION="${{ steps.package_meta.outputs.package_version }}"
+          printf '%s\n' \
+            'registry=https://registry.npmjs.org' \
+            '@naplink:registry=https://registry.npmjs.org' \
+            > "$NPM_CONFIG_USERCONFIG"
 
           if npm view "${PACKAGE_NAME}@${PACKAGE_VERSION}" version --registry https://registry.npmjs.org >/dev/null 2>&1; then
             echo "npmjs already has ${PACKAGE_NAME}@${PACKAGE_VERSION}, skipping publish."
@@ -89,14 +99,16 @@ jobs:
             echo "npmjs does not have ${PACKAGE_NAME}@${PACKAGE_VERSION}, publish will continue."
             echo "exists=false" >> "$GITHUB_OUTPUT"
           fi
-
-      - name: Setup Node.js for npmjs publish
-        if: steps.check_npm.outputs.exists != 'true'
-        uses: actions/setup-node@v4
-        with:
-          node-version: '25.x'
-          registry-url: 'https://registry.npmjs.org'
+        env:
+          NPM_CONFIG_USERCONFIG: ${{ runner.temp }}/npmrc-npm-check
 
       - name: Publish to npmjs
         if: steps.check_npm.outputs.exists != 'true'
-        run: npm publish --provenance --access public
+        run: |
+          printf '%s\n' \
+            'registry=https://registry.npmjs.org' \
+            '@naplink:registry=https://registry.npmjs.org' \
+            > "$NPM_CONFIG_USERCONFIG"
+          npm publish --provenance --access public
+        env:
+          NPM_CONFIG_USERCONFIG: ${{ runner.temp }}/npmrc-npm-publish
