@@ -1,4 +1,4 @@
-name: Publish to NPM
+name: Publish Packages
 
 on:
   push:
@@ -39,14 +39,36 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Check if version exists
-        id: check_version
+      - name: Resolve package metadata
+        id: package_meta
         run: |
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
           PACKAGE_NAME=$(node -p "require('./package.json').name")
           echo "Checking version $PACKAGE_VERSION for $PACKAGE_NAME..."
-          
+          echo "package_version=$PACKAGE_VERSION" >> "$GITHUB_OUTPUT"
+          echo "package_name=$PACKAGE_NAME" >> "$GITHUB_OUTPUT"
+
+      - name: Check GitHub Packages version
+        id: check_gpr
+        run: |
+          PACKAGE_NAME="${{ steps.package_meta.outputs.package_name }}"
+          PACKAGE_VERSION="${{ steps.package_meta.outputs.package_version }}"
+
+          pnpm config set @naplink:registry https://npm.pkg.github.com
+          pnpm config set //npm.pkg.github.com/:_authToken ${NODE_AUTH_TOKEN}
+
+          if npm view "${PACKAGE_NAME}@${PACKAGE_VERSION}" version --registry https://npm.pkg.github.com >/dev/null 2>&1; then
+            echo "GitHub Packages already has ${PACKAGE_NAME}@${PACKAGE_VERSION}, skipping publish."
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "GitHub Packages does not have ${PACKAGE_NAME}@${PACKAGE_VERSION}, publish will continue."
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Publish to GitHub Packages
+        if: steps.check_gpr.outputs.exists != 'true'
         run: |
           pnpm config set @naplink:registry https://npm.pkg.github.com
           pnpm config set //npm.pkg.github.com/:_authToken ${NODE_AUTH_TOKEN}
@@ -54,11 +76,27 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish to NPM
+      - name: Check npmjs version
+        id: check_npm
         run: |
-          pnpm config set registry https://registry.npmjs.org
-          pnpm config set @naplink:registry https://registry.npmjs.org
-          pnpm config set //registry.npmjs.org/:_authToken ${NODE_AUTH_TOKEN}
-          pnpm publish --access public --registry https://registry.npmjs.org --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          PACKAGE_NAME="${{ steps.package_meta.outputs.package_name }}"
+          PACKAGE_VERSION="${{ steps.package_meta.outputs.package_version }}"
+
+          if npm view "${PACKAGE_NAME}@${PACKAGE_VERSION}" version --registry https://registry.npmjs.org >/dev/null 2>&1; then
+            echo "npmjs already has ${PACKAGE_NAME}@${PACKAGE_VERSION}, skipping publish."
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "npmjs does not have ${PACKAGE_NAME}@${PACKAGE_VERSION}, publish will continue."
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Node.js for npmjs publish
+        if: steps.check_npm.outputs.exists != 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '25.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Publish to npmjs
+        if: steps.check_npm.outputs.exists != 'true'
+        run: npm publish --provenance --access public
