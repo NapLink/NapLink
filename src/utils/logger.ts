@@ -40,25 +40,25 @@ export class DefaultLogger implements Logger {
         this.level = LOG_LEVEL_MAP[level];
     }
 
-    debug(message: string, ...meta: any[]): void {
+    debug(message: string, ...meta: unknown[]): void {
         if (this.shouldLog(LogLevel.DEBUG)) {
             console.debug(this.format('DEBUG', message), ...meta);
         }
     }
 
-    info(message: string, ...meta: any[]): void {
+    info(message: string, ...meta: unknown[]): void {
         if (this.shouldLog(LogLevel.INFO)) {
             console.info(this.format('INFO', message), ...meta);
         }
     }
 
-    warn(message: string, ...meta: any[]): void {
+    warn(message: string, ...meta: unknown[]): void {
         if (this.shouldLog(LogLevel.WARN)) {
             console.warn(this.format('WARN', message), ...meta);
         }
     }
 
-    error(message: string, error?: Error, ...meta: any[]): void {
+    error(message: string, error?: Error, ...meta: unknown[]): void {
         if (this.shouldLog(LogLevel.ERROR)) {
             console.error(this.format('ERROR', message), error || '', ...meta);
         }

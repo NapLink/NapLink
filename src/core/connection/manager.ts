@@ -1,4 +1,5 @@
 import WebSocket from 'isomorphic-ws';
+import type EventEmitter from 'events';
 import type { NapLinkConfig, Logger } from '../../types/config';
 import {
     ConnectionError,
@@ -30,7 +31,7 @@ export class ConnectionManager {
         private logger: Logger,
         private onMessage: (data: string) => void,
         private onStateChange: (state: ConnectionState, wasReconnecting?: boolean) => void,
-        private emitter?: any // 新增：用于发送 connection:lost 事件
+        private emitter?: Pick<EventEmitter, 'emit'> // 新增：用于发送 connection:lost 事件
     ) {
         this.reconnectService = new ReconnectService(config.reconnect, logger);
     }

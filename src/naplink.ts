@@ -8,6 +8,7 @@ import { MessageDispatcher } from './core/dispatcher';
 import { handleConnectionStateChange } from './core/connection/state-handler';
 import { OneBotApi } from './api';
 import { bindOneBotApiMethods, type OneBotApiMethods } from './api/delegates';
+import type { OneBotMessageSegment } from './types/message-segment';
 import { mergeConfig } from './utils/merge-config';
 
 /**
@@ -93,14 +94,14 @@ export class NapLink extends EventEmitter {
      * 补充消息中的媒体直链
      * 自动通过 get_file / get_image / get_record 获取真实下载链接
      */
-    async hydrateMessage(message: any[]): Promise<void> {
+    async hydrateMessage(message: OneBotMessageSegment[]): Promise<void> {
         return this.api.hydrateMedia(message);
     }
 
     /**
      * 调用自定义API
      */
-    async callApi<T = any>(method: string, params: any = {}): Promise<T> {
+    async callApi<T = unknown>(method: string, params: Record<string, unknown> = {}): Promise<T> {
         return this.apiClient.call<T>(method, params);
     }
 

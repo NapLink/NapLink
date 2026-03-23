@@ -58,7 +58,7 @@ export interface FriendAddNotice extends NoticeEvent {
 export interface NotifyNotice extends NoticeEvent {
     notice_type: 'notify';
     sub_type: string;
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 export interface PokeNotice extends NotifyNotice {

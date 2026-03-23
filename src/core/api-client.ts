@@ -6,6 +6,15 @@ import { buildRequestPayload } from './api/request-builder';
 import { ResponseRegistry } from './api/response-registry';
 import { withRetry } from './api/retry';
 
+type ApiResponseEnvelope = {
+    stream?: string;
+    status?: string;
+    retcode?: number;
+    message?: string;
+    wording?: string;
+    data?: Record<string, unknown>;
+};
+
 type AsyncQueueWaiter<T> = {
     resolve: (result: IteratorResult<T>) => void;
     reject: (error: Error) => void;
@@ -87,9 +96,9 @@ export class ApiClient {
      * @param params API参数
      * @param options 调用选项
      */
-    async call<T = any>(
+    async call<T = unknown>(
         method: string,
-        params: any = {},
+        params: Record<string, unknown> = {},
         options?: { timeout?: number; retries?: number }
     ): Promise<T> {
         const timeout = options?.timeout ?? this.config.api.timeout;
@@ -108,9 +117,9 @@ export class ApiClient {
      * 调用流式 API（NapCat stream-action）
      * 会持续产出 data.type=stream 的分片包，并在 data.type=response 时结束。
      */
-    callStream<TPacket = any, TFinal = any>(
+    callStream<TPacket = unknown, TFinal = unknown>(
         method: string,
-        params: any = {},
+        params: Record<string, unknown> = {},
         options?: { timeout?: number }
     ): { packets: AsyncIterable<TPacket>; result: Promise<TFinal> } {
         const timeout = options?.timeout ?? this.config.api.timeout;
@@ -129,7 +138,7 @@ export class ApiClient {
      * 处理API响应
      * 由连接管理器调用
      */
-    handleResponse(echo: string, response: any): void {
+    handleResponse(echo: string, response: ApiResponseEnvelope): void {
         const request = this.registry.get(echo);
         if (!request) {
             // 流式响应可能会产生多条分片包；如果请求已结束，这里不应刷屏
@@ -181,8 +190,8 @@ export class ApiClient {
             });
             const error = new ApiError(
                 request.method,
-                response.retcode,
-                response.message,
+                typeof response.retcode === 'number' ? response.retcode : -1,
+                typeof response.message === 'string' ? response.message : 'Unknown API error',
                 response.wording
             );
             request.onError?.(error);
@@ -216,10 +225,10 @@ export class ApiClient {
      */
     private sendRequest<T>(
         method: string,
-        params: any,
+        params: Record<string, unknown>,
         timeout: number,
         hooks?: {
-            onPacket?: (packet: any) => void;
+            onPacket?: (packet: unknown) => void;
             onEnd?: () => void;
             onError?: (error: Error) => void;
         }
@@ -233,7 +242,7 @@ export class ApiClient {
             this.registry.add(
                 echo,
                 {
-                    resolve: (data) => resolve(data),
+                    resolve: (data) => resolve(data as T),
                     reject: (error) => reject(error),
                     createdAt: Date.now(),
                     method,

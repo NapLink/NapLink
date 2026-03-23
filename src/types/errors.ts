@@ -6,7 +6,7 @@ export class NapLinkError extends Error {
     constructor(
         message: string,
         public code: string,
-        public details?: any
+        public details?: unknown
     ) {
         super(message);
         this.name = this.constructor.name;
@@ -33,7 +33,7 @@ export class NapLinkError extends Error {
  * 当WebSocket连接失败时抛出
  */
 export class ConnectionError extends NapLinkError {
-    constructor(message: string, cause?: any) {
+    constructor(message: string, cause?: unknown) {
         super(message, 'E_CONNECTION', cause);
     }
 }

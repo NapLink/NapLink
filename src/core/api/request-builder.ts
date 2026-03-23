@@ -3,7 +3,7 @@ export type BuiltRequest = {
     echo: string;
 };
 
-export function buildRequestPayload(method: string, params: any, echo: string): BuiltRequest {
+export function buildRequestPayload(method: string, params: unknown, echo: string): BuiltRequest {
     return {
         echo,
         payload: JSON.stringify({

@@ -1,13 +1,13 @@
 import { ApiTimeoutError } from '../../types/errors';
 
 export interface PendingRequest {
-    resolve: (data: any) => void;
+    resolve: (data: unknown) => void;
     reject: (error: Error) => void;
     createdAt: number;
     method: string;
     timer: NodeJS.Timeout | number;
     timeoutMs: number;
-    onPacket?: (packet: any) => void;
+    onPacket?: (packet: unknown) => void;
     onEnd?: () => void;
     onError?: (error: Error) => void;
 }
@@ -43,7 +43,7 @@ export class ResponseRegistry {
         return true;
     }
 
-    resolve(echo: string, data: any) {
+    resolve(echo: string, data: unknown) {
         const req = this.pending.get(echo);
         if (!req) return false;
         this.pending.delete(echo);

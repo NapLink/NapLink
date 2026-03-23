@@ -16,7 +16,7 @@ export interface NapLinkConfig {
         /** 自定义心跳动作（默认 get_status） */
         heartbeatAction?: {
             action: string;
-            params?: Record<string, any>;
+            params?: Record<string, unknown>;
         };
     };
 
@@ -59,10 +59,10 @@ export interface NapLinkConfig {
  * 允许用户提供自定义logger实现
  */
 export interface Logger {
-    debug(message: string, ...meta: any[]): void;
-    info(message: string, ...meta: any[]): void;
-    warn(message: string, ...meta: any[]): void;
-    error(message: string, error?: Error, ...meta: any[]): void;
+    debug(message: string, ...meta: unknown[]): void;
+    info(message: string, ...meta: unknown[]): void;
+    warn(message: string, ...meta: unknown[]): void;
+    error(message: string, error?: Error, ...meta: unknown[]): void;
 }
 
 /**
@@ -77,7 +77,7 @@ export type PartialNapLinkConfig = {
         pingInterval?: number;
         heartbeatAction?: {
             action: string;
-            params?: Record<string, any>;
+            params?: Record<string, unknown>;
         };
     };
     reconnect?: Partial<NapLinkConfig['reconnect']>;

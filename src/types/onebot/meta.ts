@@ -12,6 +12,6 @@ export interface LifecycleMetaEvent extends MetaEvent {
 
 export interface HeartbeatMetaEvent extends MetaEvent {
     meta_event_type: 'heartbeat';
-    status: any;
+    status: Record<string, unknown>;
     interval: number;
 }

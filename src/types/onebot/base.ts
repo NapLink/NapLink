@@ -1,3 +1,5 @@
+import type { OneBotMessageSegment } from '../message-segment';
+
 /**
  * OneBot 11 Protocol Base Types
  */
@@ -11,4 +13,4 @@ export interface BaseEvent {
 }
 
 // Common message segment type (see message-segment.ts for full union)
-export type MessageSegment = any;
+export type MessageSegment = OneBotMessageSegment;
