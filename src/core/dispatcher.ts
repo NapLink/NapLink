@@ -17,8 +17,13 @@ export class MessageDispatcher {
         try {
             const data = JSON.parse(message);
 
-            // 如果有echo，说明是API响应
-            if (data.echo) {
+            // API响应包可能存在 echo=null（如 token 校验失败），不能只依赖 truthy echo。
+            const isApiResponse =
+                data &&
+                typeof data === 'object' &&
+                ('echo' in data || 'status' in data || 'retcode' in data);
+
+            if (isApiResponse) {
                 // 忽略心跳响应
                 if (typeof data.echo === 'string' && data.echo.startsWith('heartbeat_')) {
                     return;
