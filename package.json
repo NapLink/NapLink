@@ -38,6 +38,14 @@
     ],
     "author": "",
     "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/NapLink/NapLink.git"
+    },
+    "homepage": "https://github.com/NapLink/NapLink",
+    "bugs": {
+        "url": "https://github.com/NapLink/NapLink/issues"
+    },
     "dependencies": {
         "isomorphic-ws": "^5.0.0",
         "ws": "^8.18.3"
