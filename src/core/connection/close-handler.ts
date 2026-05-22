@@ -28,9 +28,10 @@ export function handleCloseEvent(deps: CloseHandlerDeps, event: any): void {
 
     const state = getState();
     if (
-        state === ConnectionState.CONNECTED ||
+        config.reconnect.enabled &&
+        (state === ConnectionState.CONNECTED ||
         state === ConnectionState.RECONNECTING ||
-        state === ConnectionState.CONNECTING
+        state === ConnectionState.CONNECTING)
     ) {
         handleReconnect({
             config,

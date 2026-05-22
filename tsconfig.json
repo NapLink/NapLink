@@ -13,6 +13,7 @@
         "outDir": "./dist",
         "rootDir": "./src",
         "strict": true,
+        "ignoreDeprecations": "6.0",
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "noImplicitReturns": true,
