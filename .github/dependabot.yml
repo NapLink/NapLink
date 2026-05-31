@@ -9,6 +9,8 @@ updates:
       interval: "daily"
     target-branch: "main"
     open-pull-requests-limit: 10
+    cooldown:
+      default-days: 1
     groups:
       minor-and-patch:
         update-types:
