@@ -64,6 +64,7 @@ export type OneBotApiMethods = {
     getRecentContact(count: number): Promise<any>;
     setMsgEmojiLike(messageId: number | string, emojiId: number, set: boolean): Promise<any>;
     fetchEmojiLike(params: { message_id: number | string; emojiId: string; emojiType: string; group_id?: number | string; user_id?: number | string; count?: number; cookie?: string }): Promise<any>;
+    fetchPttText(messageId: number | string): Promise<{ text: string }>;
     getEmojiLikes(params: { message_id: string; emoji_id: string; emoji_type?: string; group_id?: string; count?: number }): Promise<any>;
     fetchCustomFace(params?: any): Promise<any>;
     sendGroupPoke(groupId: number | string, userId: number | string): Promise<any>;
@@ -96,6 +97,9 @@ export type OneBotApiMethods = {
         duration?: number
     ): Promise<any>;
     sendLike(userId: number | string, times?: number): Promise<any>;
+    getGroupSignedList(groupId: number | string): Promise<Array<{ user_id: number; nick: string; time: number; rank: number }>>;
+    completeGroupTodo(groupId: number | string, messageIdOrSeq: number | string, useMessageSeq?: boolean): Promise<any>;
+    cancelGroupTodo(groupId: number | string, messageIdOrSeq: number | string, useMessageSeq?: boolean): Promise<any>;
     uploadGroupFile(groupId: number | string, file: string, name: string, folder?: string, uploadFile?: boolean): Promise<any>;
     uploadPrivateFile(userId: number | string, file: string, name: string, uploadFile?: boolean): Promise<any>;
     getStrangerInfo(userId: number | string, noCache?: boolean): Promise<any>;
@@ -200,6 +204,7 @@ export function bindOneBotApiMethods(api: OneBotApi, target: any): void {
         getRecentContact: (count) => api.getRecentContact(count),
         setMsgEmojiLike: (messageId, emojiId, set) => api.setMsgEmojiLike(messageId, emojiId, set),
         fetchEmojiLike: (params) => api.fetchEmojiLike(params),
+        fetchPttText: (messageId) => api.fetchPttText(messageId),
         getEmojiLikes: (params) => (api as any).getEmojiLikes(params),
         sendGroupPoke: (groupId, userId) => api.sendGroupPoke(groupId, userId),
         sendFriendPoke: (userId) => api.sendFriendPoke(userId),
@@ -228,6 +233,9 @@ export function bindOneBotApiMethods(api: OneBotApi, target: any): void {
         setGroupSpecialTitle: (groupId, userId, specialTitle, duration = -1) =>
             api.setGroupSpecialTitle(groupId, userId, specialTitle, duration),
         sendLike: (userId, times = 1) => api.sendLike(userId, times),
+        getGroupSignedList: (groupId) => api.getGroupSignedList(groupId),
+        completeGroupTodo: (groupId, messageIdOrSeq, useMessageSeq) => api.completeGroupTodo(groupId, messageIdOrSeq, useMessageSeq),
+        cancelGroupTodo: (groupId, messageIdOrSeq, useMessageSeq) => api.cancelGroupTodo(groupId, messageIdOrSeq, useMessageSeq),
         uploadGroupFile: (groupId, file, name, folder, uploadFile) => api.uploadGroupFile(groupId, file, name, folder, uploadFile),
         uploadPrivateFile: (userId, file, name, uploadFile) => api.uploadPrivateFile(userId, file, name, uploadFile),
         getStrangerInfo: (userId, noCache = false) => api.getStrangerInfo(userId, noCache),

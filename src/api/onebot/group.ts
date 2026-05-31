@@ -17,6 +17,14 @@ export type GroupApi = {
         duration?: number
     ): Promise<any>;
     sendLike(userId: number | string, times?: number): Promise<any>;
+    getGroupSignedList(groupId: number | string): Promise<Array<{
+        user_id: number;
+        nick: string;
+        time: number;
+        rank: number;
+    }>>;
+    completeGroupTodo(groupId: number | string, messageIdOrSeq: number | string, useMessageSeq?: boolean): Promise<any>;
+    cancelGroupTodo(groupId: number | string, messageIdOrSeq: number | string, useMessageSeq?: boolean): Promise<any>;
 };
 
 export function createGroupApi(client: ApiClient): GroupApi {
@@ -66,6 +74,21 @@ export function createGroupApi(client: ApiClient): GroupApi {
         },
         sendLike(userId, times = 1) {
             return client.call('send_like', { user_id: userId, times });
+        },
+        getGroupSignedList(groupId) {
+            return client.call('get_group_signed_list', { group_id: groupId });
+        },
+        completeGroupTodo(groupId, messageIdOrSeq, useMessageSeq = false) {
+            return client.call('complete_group_todo', {
+                group_id: groupId,
+                [useMessageSeq ? 'message_seq' : 'message_id']: String(messageIdOrSeq),
+            });
+        },
+        cancelGroupTodo(groupId, messageIdOrSeq, useMessageSeq = false) {
+            return client.call('cancel_group_todo', {
+                group_id: groupId,
+                [useMessageSeq ? 'message_seq' : 'message_id']: String(messageIdOrSeq),
+            });
         },
     };
 }

@@ -196,6 +196,41 @@ describe('NapLink API wrappers', () => {
         });
     });
 
+    it('fetchPttText should call fetch_ptt_text', async () => {
+        await client.fetchPttText(123);
+        expect(callSpy).toHaveBeenCalledWith('fetch_ptt_text', { message_id: 123 });
+    });
+
+    it('getGroupSignedList should call get_group_signed_list', async () => {
+        await client.getGroupSignedList('1');
+        expect(callSpy).toHaveBeenCalledWith('get_group_signed_list', { group_id: '1' });
+    });
+
+    it('completeGroupTodo and cancelGroupTodo should call todo actions', async () => {
+        await client.completeGroupTodo('1', 123);
+        expect(callSpy).toHaveBeenCalledWith('complete_group_todo', {
+            group_id: '1',
+            message_id: '123',
+        });
+
+        await client.cancelGroupTodo('1', 456, true);
+        expect(callSpy).toHaveBeenCalledWith('cancel_group_todo', {
+            group_id: '1',
+            message_seq: '456',
+        });
+    });
+
+    it('raw action table should include latest NapCat actions', async () => {
+        await client.raw.fetch_ptt_text({ message_id: 123 });
+        expect(callSpy).toHaveBeenCalledWith('fetch_ptt_text', { message_id: 123 });
+
+        await client.raw.get_group_signed_list({ group_id: '1' });
+        expect(callSpy).toHaveBeenCalledWith('get_group_signed_list', { group_id: '1' });
+
+        await client.raw.send_online_file({ user_id: '2', file: '/tmp/a.txt' });
+        expect(callSpy).toHaveBeenCalledWith('send_online_file', { user_id: '2', file: '/tmp/a.txt' });
+    });
+
     it('uploadGroupFile should call upload_group_file', async () => {
         await client.uploadGroupFile('1', '/tmp/a.txt', 'a.txt');
         expect(callSpy).toHaveBeenCalledWith('upload_group_file', {

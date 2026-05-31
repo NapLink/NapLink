@@ -60,6 +60,7 @@ export type MessageApi = {
         count?: number;
         cookie?: string;
     }): Promise<any>;
+    fetchPttText(messageId: number | string): Promise<{ text: string }>;
 
     // 戳一戳（NapCat 扩展）
     sendGroupPoke(groupId: number | string, userId: number | string): Promise<any>;
@@ -134,6 +135,9 @@ export function createMessageApi(client: ApiClient): MessageApi {
         },
         fetchEmojiLike(params) {
             return client.call('fetch_emoji_like', params);
+        },
+        fetchPttText(messageId) {
+            return client.call('fetch_ptt_text', { message_id: messageId });
         },
         sendGroupPoke(groupId, userId) {
             return client.call('group_poke', { group_id: groupId, user_id: userId });
