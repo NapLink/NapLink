@@ -25,7 +25,7 @@
         "lint:fix": "eslint src tests examples --ext .ts --fix",
         "typecheck": "tsc --noEmit"
     },
-    "packageManager": "pnpm@12.4.2",
+    "packageManager": "pnpm@12.5.1",
     "keywords": [
         "napcat",
         "onebot",
