@@ -171,10 +171,10 @@ importers:
     dependencies:
       isomorphic-ws:
         specifier: ^5.0.0
-        version: 5.0.0(ws@8.21.3)
+        version: 5.0.0(ws@8.22.0)
       ws:
         specifier: ^8.18.3
-        version: 8.21.3
+        version: 8.22.0
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^3.3.3
@@ -1727,8 +1727,8 @@ packages:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
     engines: {node: '>=0.10.0'}
 
-  ws@8.21.3:
-    resolution: {integrity: sha512-201TZ/kPWxoPr/OKWjquZR1SWKXcvxdH+e1xrx89b3YbmzLMFCLfnaG1HFIgWzJOEWZ7MvpK++odZufgYR50Rw==}
+  ws@8.22.0:
+    resolution: {integrity: sha512-Ydggc987+RO0AnWtZ/7Wq9FtNvcrL1b/RO0ud9mWjUPgDrsAAwQSF51sm2hm1XofbU/4jkpGEsLFsZZxU+1DOg==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -2615,9 +2615,9 @@ snapshots:
 
   isexe@2.0.0: {}
 
-  isomorphic-ws@5.0.0(ws@8.21.3):
+  isomorphic-ws@5.0.0(ws@8.22.0):
     dependencies:
-      ws: 8.21.3
+      ws: 8.22.0
 
   joycon@3.1.1: {}
 
@@ -2975,6 +2975,6 @@ snapshots:
 
   word-wrap@1.2.5: {}
 
-  ws@8.21.3: {}
+  ws@8.22.0: {}
 
   yocto-queue@0.1.0: {}
